@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Postman
+Postman/
+postman/
+
+# dotenv environment variable files
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Build output
+dist/
+build/
+
+# Uploads (if any file uploads are stored locally)
+uploads/
+
+# OS-specific files
+.DS_Store
+
+# IDE and editor settings
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Google Cloud / Firebase service account keys
+service-key.json

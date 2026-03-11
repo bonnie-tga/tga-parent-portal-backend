@@ -1,0 +1,36 @@
+# Git
+.git
+.github
+.gitignore
+
+# Node.js
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build artifacts
+dist
+
+# Environment variables
+.env*
+!.env.production
+
+# Development files
+*.md
+.vscode
+.idea
+.DS_Store
+
+# Testing
+test
+coverage
+
+# Other
+.gcloudignore
+app.yaml
+cloudbuild.yaml
+gcp-secrets-reference.yaml
+
+# Include built files
+!dist/ 

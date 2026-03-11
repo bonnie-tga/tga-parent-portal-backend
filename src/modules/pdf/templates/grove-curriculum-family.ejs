@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grove Curriculum</title>
+  <style>
+    @page {
+      margin: 0;
+      size: A4 landscape;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      font-family: Arial, sans-serif;
+      background-color: white;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      padding: 28px 24px 32px 24px;
+      min-height: 100vh;
+    }
+    .header {
+      margin-bottom: 24px;
+      padding-top: 16px;
+      width: 100%;
+    }
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      position: relative;
+      width: 100%;
+    }
+    .title-section {
+      flex: 1;
+      text-align: center;
+    }
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    .title-grove {
+      color: #94C679;
+    }
+    .title-curriculum {
+      color: #FCC443;
+      font-family: cursive;
+    }
+    .subtitle {
+      font-size: 18px;
+      font-style: italic;
+      color: #374151;
+      margin-top: 8px;
+      font-family: cursive;
+    }
+    .logo-section {
+      position: absolute;
+      right: 40px;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .logo-img {
+      width: 110px;
+      height: 110px;
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: -32px;
+    }
+    .logo-text-top {
+      font-size: 14px;
+    }
+    .logo-text-grove {
+      color: #94C679;
+    }
+    .logo-text-gray {
+      color: #9CA3AF;
+    }
+    .school-readiness-section {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #4B5563;
+    }
+    .school-readiness-icon {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 auto;
+    }
+    .info-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      color: #374151;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .info-item {
+      display: flex;
+    }
+    .info-label {
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    .groves-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+    .grove-card {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid;
+    }
+    .grove-header {
+      text-align: center;
+      padding: 8px;
+      font-weight: 500;
+      color: #374151;
+      font-size: 14px;
+    }
+    .grove-content {
+      padding: 18px 18px 16px 18px;
+      min-height: 460px;
+      font-size: 13px;
+      color: #374151;
+    }
+    .category-block {
+      margin-top: 14px;
+      margin-bottom: 12px;
+    }
+    .category-title {
+      font-weight: 600;
+      color: #1F2937;
+      margin-bottom: 6px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .grove-entry {
+      margin-bottom: 6px;
+      page-break-inside: avoid;
+    }
+    .env-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .env-icon {
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+    .env-icon-img {
+      width: 24px;
+      height: 24px;
+    }
+    .env-text {
+      flex: 1;
+    }
+    .entry-date {
+      font-weight: 600;
+      margin-bottom: 2px;
+      font-size: 13px;
+    }
+    .entry-description {
+      color: #4B5563;
+      margin-bottom: 2px;
+      font-size: 13px;
+    }
+    .entry-children {
+      color: #4B5563;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .grove-body {
+      border-color: #B7D5B0;
+    }
+    .grove-body-header {
+      background-color: #D4E8D1;
+      color: #6B9B7A;
+    }
+    .grove-body-date {
+      color: #6B9B7A;
+    }
+    .grove-mind {
+      border-color: #AFD4CC;
+    }
+    .grove-mind-header {
+      background-color: #CFE8E3;
+      color: #5A9B8A;
+    }
+    .grove-mind-date {
+      color: #5A9B8A;
+    }
+    .grove-heart {
+      border-color: #E7B8B6;
+    }
+    .grove-heart-header {
+      background-color: #F7D7D6;
+      color: #C85A5A;
+    }
+    .grove-heart-date {
+      color: #C85A5A;
+    }
+    .grove-compass {
+      border-color: #B6C5EE;
+    }
+    .grove-compass-header {
+      background-color: #D9E1F7;
+      color: #7A8BC8;
+    }
+    .grove-compass-date {
+      color: #7A8BC8;
+    }
+    .grove-expression {
+      border-color: #EFCF9E;
+    }
+    .grove-expression-header {
+      background-color: #FBE8C6;
+      color: #E8A85A;
+    }
+    .grove-expression-date {
+      color: #E8A85A;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="title">
+          <span class="title-grove">Grove</span>
+          <span class="title-curriculum">Curriculum</span>
+        </h1>
+        <p class="subtitle">"It's In Our Nature To Nurture"</p>
+      </div>
+      <div class="logo-section">
+        <img src="data:image/svg+xml;base64,<%- logoBase64 %>" alt="The Grove Academy" class="logo-img" />
+        <div class="logo-text">
+          <span class="logo-text-top">
+            <span class="logo-text-gray">the </span>
+            <span class="logo-text-grove">grove</span>
+          </span>
+          <span class="logo-text-top logo-text-gray">academy.</span>
+        </div>
+      </div>
+    </div>
+    <div class="info-section">
+      <p class="info-item">
+        <span class="info-label">Month:</span>
+        <span><%= month %></span>
+      </p>
+      <p class="info-item">
+        <span class="info-label">Campus:</span>
+        <span><%= campus %></span>
+      </p>
+      <p class="info-item">
+        <span class="info-label">Room:</span>
+        <span><%= room %></span>
+      </p>
+    </div>
+  </div>
+  <div class="school-readiness-section">
+    <img src="data:image/svg+xml;base64,<%- schoolIconBase64 %>" alt="School Readiness" class="school-readiness-icon" />
+    <span>School Readiness</span>
+  </div>
+  <div class="groves-grid">
+    <% groves.forEach(function(grove) { %>
+      <div class="grove-card grove-<%= grove.key %>">
+        <div class="grove-header grove-<%= grove.key %>-header">
+          <%= grove.name %>
+        </div>
+        <div class="grove-content">
+          <% if (grove.environment && grove.environment.length > 0) { %>
+            <div class="category-block">
+              <div class="category-title">Environment</div>
+              <% grove.environment.forEach(function(entry) { %>
+                <div class="grove-entry <%= entry.isSchoolReadiness ? 'env-entry' : '' %>">
+                  <% if (entry.isSchoolReadiness) { %>
+                    <div class="env-icon">
+                      <img src="data:image/svg+xml;base64,<%- schoolIconBase64 %>" alt="School Readiness" class="env-icon-img" />
+                    </div>
+                  <% } %>
+                  <div class="env-text">
+                    <% if (entry.date) { %>
+                      <p class="entry-date grove-<%= grove.key %>-date"><%= entry.date %></p>
+                    <% } %>
+                    <% if (entry.purpose) { %>
+                      <p class="entry-description"><%= entry.purpose %></p>
+                    <% } %>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+
+          <% if (grove.spontaneous && grove.spontaneous.length > 0) { %>
+            <div class="category-block">
+              <div class="category-title">Spontaneous Learning</div>
+              <% grove.spontaneous.forEach(function(entry) { %>
+                <div class="grove-entry">
+                  <% if (entry.date) { %>
+                    <p class="entry-date grove-<%= grove.key %>-date"><%= entry.date %></p>
+                  <% } %>
+                  <% if (entry.title) { %>
+                    <p class="entry-description"><%= entry.title %></p>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+
+          <% if (grove.outdoor && grove.outdoor.length > 0) { %>
+            <div class="category-block">
+              <div class="category-title">Outdoor Learning</div>
+              <% grove.outdoor.forEach(function(entry) { %>
+                <div class="grove-entry">
+                  <% if (entry.date) { %>
+                    <p class="entry-date grove-<%= grove.key %>-date"><%= entry.date %></p>
+                  <% } %>
+                  <% if (entry.description) { %>
+                    <p class="entry-description"><%= entry.description %></p>
+                  <% } %>
+                  <% if (entry.children) { %>
+                    <p class="entry-children"><%= entry.children %></p>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</body>
+</html>
+
+
