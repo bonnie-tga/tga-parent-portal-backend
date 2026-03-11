@@ -1,7 +1,7 @@
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 4000,
   database: {
-    uri: process.env.MONGODB_URI || 'mongodb://root:supersecret123@31.97.115.103:27017/appdb?authSource=admin',
+    uri: process.env.MONGODB_URI,
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'your-secret-key',
