@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsIn,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class LoginDto {
@@ -25,4 +31,15 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @ApiPropertyOptional({
+    example: 'mobile',
+    description:
+      'Client type: "web" or "mobile". Mobile logins are restricted to parent accounts.',
+    enum: ['web', 'mobile'],
+  })
+  @IsString()
+  @IsOptional()
+  @IsIn(['web', 'mobile'])
+  clientType?: 'web' | 'mobile';
 }

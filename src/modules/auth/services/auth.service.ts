@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   ConflictException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
@@ -24,16 +25,29 @@ export class AuthService {
     private feedService: FeedService,
   ) {}
 
-  async validateUser(identifier: string, password: string): Promise<any> {
-    // Try finding by email first; if not found, try by username
-    const user = await this.userModel.findOne({
-      $or: [{ email: identifier }, { username: identifier }],
-    });
+  private excludePassword<T extends { password?: string }>(
+    user: T,
+  ): Omit<T, 'password'> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...safeUser } = user;
+    return safeUser;
+  }
 
+  async validateUser(identifier: string, password: string): Promise<any> {
     const looksLikeEmail = /@/.test(identifier);
+
+    const user = await this.userModel
+      .findOne({ $or: [{ email: identifier }, { username: identifier }] })
+      .select(
+        '-refreshToken -resetPasswordToken -resetPasswordExpires -setPasswordToken -setPasswordExpires',
+      )
+      .lean();
+
     if (!user) {
       throw new UnauthorizedException(
-        looksLikeEmail ? 'Email not found' : 'Username not found',
+        looksLikeEmail
+          ? 'Invalid email or password!'
+          : 'Invalid username or password!',
       );
     }
 
@@ -45,13 +59,11 @@ export class AuthService {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    // if (!isPasswordValid) {
-    //   throw new UnauthorizedException('Incorrect password');
-    // }
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or password!');
+    }
 
-    // Don't return the password
-    const { password: _, ...result } = user.toObject();
-    return result;
+    return this.excludePassword(user);
   }
 
   async login(loginDto: LoginDto) {
@@ -60,6 +72,10 @@ export class AuthService {
       throw new BadRequestException('Either email or username is required');
     }
     const user = await this.validateUser(identifier, loginDto.password);
+
+    if (loginDto.clientType === 'mobile' && user.role !== UserRole.PARENT) {
+      throw new ForbiddenException('Invalid user!');
+    }
 
     const payload = {
       email: user.email,
@@ -108,8 +124,7 @@ export class AuthService {
       throw new UnauthorizedException('User not found');
     }
 
-    const { password, ...result } = user;
-    return result;
+    return this.excludePassword(user);
   }
 
   /**
@@ -289,8 +304,7 @@ export class AuthService {
       }
     }
 
-    // Don't return the password
-    const { password: _, ...result } = savedUser.toObject();
+    const result = this.excludePassword(savedUser.toObject());
 
     // Generate JWT token
     const payload = {
@@ -332,25 +346,35 @@ export class AuthService {
     }
 
     // Create feed item for new staff members based on rooms
-    if (savedUser.role === UserRole.STAFF && savedUser.rooms && savedUser.rooms.length > 0) {
+    if (
+      savedUser.role === UserRole.STAFF &&
+      savedUser.rooms &&
+      savedUser.rooms.length > 0
+    ) {
       try {
-        const createdById = currentUser?._id?.toString() || savedUser._id.toString();
-        
+        const createdById =
+          currentUser?._id?.toString() || savedUser._id.toString();
+
         for (const roomId of savedUser.rooms) {
           const room = await this.userModel.db
             .collection('rooms')
             .findOne({ _id: new Types.ObjectId(roomId.toString()) });
-          
+
           if (room) {
             const roomName = room.name || 'the room';
-            const campusId = room.campus ? room.campus.toString() : (savedUser.campuses && savedUser.campuses.length > 0 ? savedUser.campuses[0].toString() : null);
-            const staffFullName = `${savedUser.firstName} ${savedUser.lastName}`.trim();
+            const campusId = room.campus
+              ? room.campus.toString()
+              : savedUser.campuses && savedUser.campuses.length > 0
+                ? savedUser.campuses[0].toString()
+                : null;
+            const staffFullName =
+              `${savedUser.firstName} ${savedUser.lastName}`.trim();
             const title = `Welcome ${staffFullName}`;
             const description = `Please meet our newest staff member at ${roomName}.`;
-            
+
             const visibleUntil = new Date();
             visibleUntil.setDate(visibleUntil.getDate() + 1);
-            
+
             await this.feedService.create(
               {
                 type: 'new-staff',
@@ -525,12 +549,9 @@ export class AuthService {
         throw new UnauthorizedException('User account is inactive');
       }
 
-      // Don't return the password
-      const { password: _, ...result } = user.toObject();
-
       return {
         isValid: true,
-        user: result,
+        user: this.excludePassword(user.toObject()),
       };
     } catch (error) {
       throw new UnauthorizedException('Invalid session');
