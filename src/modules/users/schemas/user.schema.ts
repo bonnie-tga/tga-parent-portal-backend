@@ -38,10 +38,10 @@ export class User extends Document {
   @Prop({ required: true })
   lastName: string;
 
-  @Prop({ required: false })
+  @Prop({ required: false, index: true, unique: true, sparse: true })
   email?: string;
 
-  @Prop({ required: false })
+  @Prop({ required: false, index: true, unique: true, sparse: true })
   username?: string;
 
   @Prop({ required: true })
